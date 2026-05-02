@@ -92,6 +92,30 @@ export async function queryDatabase(
   return pages;
 }
 
+export async function createPageRaw(
+  dbId: string,
+  properties: Record<string, unknown>,
+  blocks: BlockObjectRequest[]
+): Promise<PageObjectResponse> {
+  const notion = getClient();
+  const MAX_BLOCKS = 100;
+
+  const page = await notion.pages.create({
+    parent: { database_id: dbId },
+    properties: properties as Parameters<typeof notion.pages.create>[0]["properties"],
+    children: blocks.slice(0, MAX_BLOCKS),
+  });
+
+  for (let i = MAX_BLOCKS; i < blocks.length; i += MAX_BLOCKS) {
+    await notion.blocks.children.append({
+      block_id: page.id,
+      children: blocks.slice(i, i + MAX_BLOCKS),
+    });
+  }
+
+  return page as PageObjectResponse;
+}
+
 export async function updatePage(
   pageId: string,
   properties: Record<string, unknown>
