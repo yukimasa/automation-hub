@@ -23,3 +23,18 @@ export function getYesterdayJST(): string {
 export function getTodayJST(): string {
   return formatJST(new Date());
 }
+
+export function getLastWeekRangeJST(): { start: string; end: string } {
+  const todayJST = formatJST(new Date());
+  const [y, m, d] = todayJST.split("-").map(Number);
+  const todayDate = new Date(Date.UTC(y, m - 1, d));
+  const dow = todayDate.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+  const daysFromMonday = dow === 0 ? 6 : dow - 1;
+  const thisMondayMs = todayDate.getTime() - daysFromMonday * 86400000;
+  const lastMondayMs = thisMondayMs - 7 * 86400000;
+  const lastSundayMs = lastMondayMs + 6 * 86400000;
+  return {
+    start: formatJST(new Date(lastMondayMs)),
+    end: formatJST(new Date(lastSundayMs)),
+  };
+}

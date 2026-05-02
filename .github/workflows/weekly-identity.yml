@@ -1,0 +1,28 @@
+name: weekly-identity
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"  # UTC 00:00 = JST 09:00 (毎週月曜)
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - run: npm ci
+
+      - run: npx tsx scripts/weekly-identity.ts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          LIFELOG_DB_ID: ${{ secrets.LIFELOG_DB_ID }}
+          SYSTEM_LOGS_DB_ID: ${{ secrets.SYSTEM_LOGS_DB_ID }}
+          IDENTITY_DB_ID: ${{ secrets.IDENTITY_DB_ID }}
+          DECISIONS_DB_ID: ${{ secrets.DECISIONS_DB_ID }}
+          IDENTITY_SKILL_PAGE_ID: ${{ secrets.IDENTITY_SKILL_PAGE_ID }}

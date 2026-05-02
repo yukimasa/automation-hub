@@ -12,7 +12,7 @@ function getClient(): Anthropic {
 export async function chat(systemPrompt: string, userMessage: string): Promise<string> {
   const client = getClient();
   const message = await client.messages.create({
-    model: "claude-sonnet-4-5",
+    model: "claude-sonnet-4-6",
     max_tokens: 4096,
     system: systemPrompt,
     messages: [{ role: "user", content: userMessage }],

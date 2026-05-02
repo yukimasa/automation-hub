@@ -92,6 +92,17 @@ export async function queryDatabase(
   return pages;
 }
 
+export async function updatePage(
+  pageId: string,
+  properties: Record<string, unknown>
+): Promise<void> {
+  const notion = getClient();
+  await notion.pages.update({
+    page_id: pageId,
+    properties: properties as Parameters<typeof notion.pages.update>[0]["properties"],
+  });
+}
+
 export async function createPage(
   dbId: string,
   properties: Record<string, unknown>,
