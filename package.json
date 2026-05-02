@@ -1,0 +1,23 @@
+{
+  "name": "automation-hub",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "daily-lifelog": "npx tsx scripts/daily-lifelog.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.92.0",
+    "@notionhq/client": "^2.3.0",
+    "dotenv": "^17.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.0",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3"
+  }
+}

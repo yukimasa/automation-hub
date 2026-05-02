@@ -1,0 +1,27 @@
+name: daily-lifelog
+
+on:
+  schedule:
+    - cron: "0 22 * * *"  # UTC 22:00 = JST 07:00
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - run: npm ci
+
+      - run: npx tsx scripts/daily-lifelog.ts
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NIPPO_SKILL_PAGE_ID: ${{ secrets.NIPPO_SKILL_PAGE_ID }}
+          LIMITLESS_RAW_DB_ID: ${{ secrets.LIMITLESS_RAW_DB_ID }}
+          LIFELOG_DB_ID: ${{ secrets.LIFELOG_DB_ID }}
+          SYSTEM_LOGS_DB_ID: ${{ secrets.SYSTEM_LOGS_DB_ID }}
