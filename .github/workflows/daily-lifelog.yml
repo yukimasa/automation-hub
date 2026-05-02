@@ -2,7 +2,7 @@ name: daily-lifelog
 
 on:
   schedule:
-    - cron: "0 22 * * *"  # UTC 22:00 = JST 07:00
+    - cron: "0 19 * * *"  # UTC 19:00 = JST 04:00
   workflow_dispatch:
 
 jobs:
