@@ -6,6 +6,7 @@
     "daily-lifelog": "npx tsx scripts/daily-lifelog.ts",
     "weekly-identity": "npx tsx scripts/weekly-identity.ts",
     "limitless-sync": "npx tsx scripts/limitless-sync.ts",
+    "data-integrity-check": "npx tsx scripts/data-integrity-check.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
