@@ -2,7 +2,7 @@ name: limitless-sync
 
 on:
   schedule:
-    - cron: "*/15 * * * *"  # 15分おき
+    - cron: "0 16 * * *"  # UTC 16:00 = JST 01:00
   workflow_dispatch:
 
 jobs:

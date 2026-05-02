@@ -4,7 +4,7 @@ import { logToSystemLogs } from "../lib/system-logs.js";
 import type { BlockObjectRequest } from "@notionhq/client/build/src/api-endpoints.js";
 
 const SOURCE = "Limitless同期";
-const LOOKBACK_MINUTES = 60;
+const LOOKBACK_MINUTES = 1500; // 25時間（前日分をカバー）
 const LIMITLESS_LIMIT = 50;
 const THROTTLE_MS = 350;
 
