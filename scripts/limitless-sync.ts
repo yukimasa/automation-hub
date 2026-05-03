@@ -158,22 +158,27 @@ async function createLifelogPage(lifelog: LimitlessLifelog): Promise<boolean> {
 async function main() {
   const until = new Date();
   const since = new Date(until.getTime() - LOOKBACK_MINUTES * 60 * 1000);
+  const sinceJST = formatJSTDatetime(since);
+  const untilJST = formatJSTDatetime(until);
+
+  console.log(`取得範囲(JST): ${sinceJST} 〜 ${untilJST}`);
 
   await logToSystemLogs({
     title: "Limitless同期 実行開始",
     level: "INFO",
-    content: `取得範囲: ${since.toISOString()} 〜 ${until.toISOString()}`,
+    content: `取得範囲(JST): ${sinceJST} 〜 ${untilJST}`,
     relatedDbs: ["limitless_raw"],
     source: SOURCE,
   });
 
   const lifelogs = await fetchLifelogs(process.env.LIMITLESS_API_TOKEN!, since, until);
+  console.log(`APIから取得: ${lifelogs.length}件`);
 
   if (lifelogs.length === 0) {
     await logToSystemLogs({
       title: "Limitless同期 スキップ（データなし）",
       level: "INFO",
-      content: `対象期間にLifelogなし`,
+      content: `対象期間(JST)にLifelogなし: ${sinceJST} 〜 ${untilJST}`,
       relatedDbs: ["limitless_raw"],
       source: SOURCE,
     });
@@ -188,11 +193,15 @@ async function main() {
     if (exists) { skipped++; continue; }
 
     const ok = await createLifelogPage(lifelog);
-    if (ok) created++;
+    if (ok) {
+      created++;
+      console.log(`作成: ${lifelog.id} (${lifelog.title})`);
+    }
 
     await sleep(THROTTLE_MS);
   }
 
+  console.log(`完了: 取得=${lifelogs.length} 新規=${created} スキップ=${skipped}`);
   await logToSystemLogs({
     title: "Limitless同期 完了",
     level: "INFO",

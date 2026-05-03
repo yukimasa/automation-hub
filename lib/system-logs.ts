@@ -1,5 +1,5 @@
 import { createPage } from "./notion.js";
-import { getTodayJST } from "./date.js";
+import { getJSTISOString } from "./date.js";
 
 interface LogParams {
   title: string;
@@ -14,7 +14,7 @@ export async function logToSystemLogs(params: LogParams): Promise<void> {
 
   const properties: Record<string, unknown> = {
     ログタイトル: { title: [{ text: { content: title } }] },
-    実行日時: { date: { start: getTodayJST() } },
+    実行日時: { date: { start: getJSTISOString() } },
     ログレベル: { select: { name: level } },
     ログ内容: { rich_text: [{ text: { content } }] },
     実行元: { rich_text: [{ text: { content: source } }] },
@@ -25,5 +25,6 @@ export async function logToSystemLogs(params: LogParams): Promise<void> {
     properties["関連DB"] = { multi_select: relatedDbs.map((name) => ({ name })) };
   }
 
+  console.log(`[${level}] ${title}`);
   await createPage(process.env.SYSTEM_LOGS_DB_ID!, properties, "");
 }

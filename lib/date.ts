@@ -24,6 +24,13 @@ export function getTodayJST(): string {
   return formatJST(new Date());
 }
 
+export function getJSTISOString(): string {
+  const now = new Date();
+  // UTC時刻に+9hしてISO文字列に変換し、ZをJSTオフセットに置換
+  const jst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  return jst.toISOString().replace("Z", "+09:00");
+}
+
 export function getLastWeekRangeJST(): { start: string; end: string } {
   const todayJST = formatJST(new Date());
   const [y, m, d] = todayJST.split("-").map(Number);
