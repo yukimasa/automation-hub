@@ -14,10 +14,6 @@ function getPageTitle(page: PageObjectResponse): string {
   return "(無題)";
 }
 
-function pageUrl(page: PageObjectResponse): string {
-  return `https://www.notion.so/${page.id.replace(/-/g, "")}`;
-}
-
 async function main() {
   const targetDate = getYesterdayJST();
 
@@ -63,13 +59,11 @@ async function main() {
 
   // 各 raw ページのテキストを収集
   const rawTexts: string[] = [];
-  const rawUrls: string[] = [];
 
   for (const page of rawPages) {
     const title = getPageTitle(page);
     const body = await getPageMarkdown(page.id);
     rawTexts.push(`## ${title}\n${body}`);
-    rawUrls.push(pageUrl(page));
   }
 
   const userMessage = `対象日: ${targetDate}\n\n${rawTexts.join("\n\n---\n\n")}`;
@@ -87,7 +81,7 @@ async function main() {
       日報タイトル: { title: [{ text: { content: `${targetDate} 日報` } }] },
       日報日付: { date: { start: targetDate } },
       主な情報源: { select: { name: "Limitless Pendant" } },
-      rawページURL: { rich_text: [{ text: { content: rawUrls.join("\n") } }] },
+      参照元raw: { relation: rawPages.map((p) => ({ id: p.id })) },
     },
     markdown
   );
