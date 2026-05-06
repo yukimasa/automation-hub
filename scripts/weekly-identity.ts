@@ -254,7 +254,7 @@ ${identitySection}
 
 ${decisionsSection}`;
 
-  const responseText = await chat(systemPrompt, userMessage);
+  const responseText = await chat(systemPrompt, userMessage, 16384);
 
   const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/);
   if (!jsonMatch) {
