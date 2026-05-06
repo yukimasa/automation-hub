@@ -15,7 +15,7 @@ function getPageTitle(page: PageObjectResponse): string {
 }
 
 async function main() {
-  const targetDate = getYesterdayJST();
+  const targetDate = process.env.TARGET_DATE || getYesterdayJST();
 
   await logToSystemLogs({
     title: "日報生成AI 実行開始",
@@ -69,7 +69,16 @@ async function main() {
   const userMessage = `対象日: ${targetDate}\n\n${rawTexts.join("\n\n---\n\n")}`;
 
   // system prompt を Notion から取得
-  const systemPrompt = await getPageMarkdown(process.env.NIPPO_SKILL_PAGE_ID!);
+  const skillPrompt = await getPageMarkdown(process.env.NIPPO_SKILL_PAGE_ID!);
+  const systemPrompt = `${skillPrompt}
+
+## 🔧 このバッチでの出力ルール（最優先）
+
+このスクリプトは limitless_raw クエリ・既存日報チェック・db_lifelog ページ作成・db_system_logs ログ記録をすべてコード側で実行する。あなたの仕事は **対象日の日報本文（Markdown）を生成すること** のみ。
+
+- 「ステップN：...」のような手順説明、実行ログのテンプレ、保存仕様の説明、前置き／後書きを一切出力しない
+- あなたの応答テキスト全体がそのまま db_lifelog の対象日ページ本文として保存される
+- 出力は \`## 主な出来事（時系列順）\` などのセクション見出しから始める（スキル定義「5) 出力テンプレ」の構成に従う）`;
 
   // 日報生成
   const markdown = await chat(systemPrompt, userMessage);
